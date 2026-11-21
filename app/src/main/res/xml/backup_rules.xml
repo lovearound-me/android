@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The session and the cached book stay on this phone: a restored backup
+     would carry someone's sign-in to another phone. -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="auth.xml" />
+    <exclude domain="sharedpref" path="push.xml" />
+    <exclude domain="sharedpref" path="site-signin.xml" />
+    <exclude domain="file" path="last-seen.json" />
+</full-backup-content>
