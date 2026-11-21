@@ -268,11 +268,14 @@ fun ContactEditor(model: AppModel, contact: Contact) {
                 SwitchRow(tr("Рядом"), close, { close = it }, enabled = contact.isClose || !model.closeFull, tint = C.link)
             }
             contact.inviteUrl?.let { link ->
-                Group(footer = link) {
+                // Like one's own Love ID in «Аккаунт»: the link itself, not the name.
+                Group {
                     GroupRow(onClick = { share(context, link) }) {
-                        Icon(Icons.Filled.Share, null, tint = C.link, modifier = Modifier.size(20.dp))
-                        Spacer(Modifier.width(12.dp))
-                        Text(tr("Love ID: {name}", "name" to contact.label), color = C.link, fontSize = 16.sp)
+                        Column(Modifier.weight(1f)) {
+                            Text("Love ID", color = C.ink, fontSize = 16.sp)
+                            Text(link.removePrefix("https://"), color = C.muted, fontSize = 13.sp)
+                        }
+                        Icon(Icons.Filled.Share, tr("Love ID: {name}", "name" to contact.label), tint = C.link)
                     }
                 }
             }
