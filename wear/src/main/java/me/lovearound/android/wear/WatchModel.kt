@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.lovearound.android.ApiError
 import me.lovearound.android.Contact
+import me.lovearound.android.WidgetData
 import me.lovearound.android.tr
 import kotlin.random.Random
 
@@ -101,6 +102,7 @@ class WatchModel(private val context: Context, val demo: WatchDemo?) {
         session = saved
         screen = if (saved != null) Screen.Main else Screen.SignIn
         demo?.apply(this)
+        if (demo == null) WidgetData.setMyColor(context, myColor)
         if (demo == null && saved != null) scope.launch { startReceiving() }
     }
 
@@ -185,6 +187,7 @@ class WatchModel(private val context: Context, val demo: WatchDemo?) {
         if (demo == null) {
             Session.clear(context)
             WatchPush.forget(context)
+            WidgetData.clear(context)
         }
         session = null
         contacts = emptyList()
@@ -273,7 +276,10 @@ class WatchModel(private val context: Context, val demo: WatchDemo?) {
 
     fun updateColor(index: Int) {
         myColor = index
-        if (demo == null) WatchSettings.setMyColor(context, index)
+        if (demo == null) {
+            WatchSettings.setMyColor(context, index)
+            WidgetData.setMyColor(context, index)
+        }
     }
 
     // An incoming heart
@@ -303,10 +309,14 @@ class WatchModel(private val context: Context, val demo: WatchDemo?) {
                 contacts = WatchApi(session.token).contacts()
                 loaded = true
                 sendingOff = false
+                WidgetData.save(context, WidgetData.from(contacts))
             } catch (e: ApiError) {
                 when {
                     e.sessionGone -> signOut(tr("Часы отключены в «Устройствах». Войди снова."))
-                    e.switchedOff -> { contacts = emptyList(); loaded = true; sendingOff = true }
+                    e.switchedOff -> {
+                        contacts = emptyList(); loaded = true; sendingOff = true
+                        WidgetData.save(context, emptyList())
+                    }
                     // Offline: keep what is on screen and try on the next refresh.
                 }
             }

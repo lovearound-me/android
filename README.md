@@ -34,6 +34,13 @@ Android 9 and newer.
 - **Hearts in**: the server's WebSocket while the app is in front; Firebase
   Cloud Messaging data messages behind (`Messaging` in `Push.kt`), written
   into a notification by the app, new emoji each time.
+- **Outside the app** (`widget/`, as the iPhone's widgets and Control
+  Center buttons): home screen widgets «Один человек» (one big bubble, who
+  is picked when it is placed) and «Близкие» (four in a row, «›» for the
+  next four; pulled taller, the soty with «Кому-нибудь»), and two quick
+  settings, «♥ <person>» (picked by a long press) and «Кому-нибудь». A tap
+  sends with the app's own session; the app stays closed. They draw from
+  `WidgetData` (shared/), a copy of the book the app keeps on the phone.
 
 ## The watch app (`wear/`)
 
@@ -48,8 +55,12 @@ See [wear/README.md](wear/README.md).
 The tests draw every demo screen of both apps on the JVM (Robolectric and
 Roborazzi, no emulator) into `app/build/outputs/roborazzi/<lang>/` and
 `wear/build/outputs/roborazzi/<lang>/`, and check the sign-in box against
-one sealed by the site's own code. `scripts/screenshots.sh` takes the same
-screens from a running emulator or a phone.
+one sealed by the site's own code. The widgets and the watch's tile are
+drawn the same way (`widgets/`, `tile/`, and `ru-pixel/` for a 41 mm
+Pixel Watch); `scripts/widget-previews.sh` copies the ones the widget
+picker and the tile list show into `res/`. `scripts/screenshots.sh` takes
+the app's screens from a running emulator or a phone. A debug phone build
+offers «Близкие» for the home screen with `--ez pinWidget true`.
 
 `--es demo <name>` opens a screen with made-up people and no network (see
 `Demo.kt`, `WatchDemo.kt`); a debug phone build also takes `--es token

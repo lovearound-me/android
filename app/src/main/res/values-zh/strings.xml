@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">一个人</string>
+    <string name="widget_person_description">一个大圆圈：轻点一下，就送去一颗心。</string>
+    <string name="widget_close">亲近的人</string>
+    <string name="widget_close_description">亲近的人的圆圈：轻点一下，就送去一颗心。</string>
+    <string name="tile_person">送一颗心</string>
+    <string name="tile_anyone">世界上的某个人</string>
+</resources>

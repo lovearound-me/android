@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">Satu orang</string>
+    <string name="widget_person_description">Lingkaran besar: ketuk untuk mengirim hati.</string>
+    <string name="widget_close">Orang terdekat</string>
+    <string name="widget_close_description">Lingkaran orang terdekatmu: ketuk untuk mengirim hati.</string>
+    <string name="tile_person">Kirim hati</string>
+    <string name="tile_anyone">Seseorang di dunia</string>
+</resources>

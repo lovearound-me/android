@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">One person</string>
+    <string name="widget_person_description">A big bubble: a tap sends them a heart.</string>
+    <string name="widget_close">Close people</string>
+    <string name="widget_close_description">Bubbles of your close people: a tap sends a heart.</string>
+    <string name="tile_person">Send a heart</string>
+    <string name="tile_anyone">Someone in the world</string>
+</resources>

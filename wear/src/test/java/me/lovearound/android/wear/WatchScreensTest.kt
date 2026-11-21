@@ -11,6 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
@@ -30,14 +31,17 @@ class WatchScreensTest(private val lang: String, private val name: String) {
     companion object {
         @JvmStatic
         @ParameterizedRobolectricTestRunner.Parameters(name = "{0}/{1}")
-        fun screens(): List<Array<String>> = listOf("ru", "en").flatMap { lang -> WatchDemo.names.map { arrayOf(lang, it) } }
+        fun screens(): List<Array<String>> =
+            listOf("ru", "en", "ru-pixel").flatMap { lang -> WatchDemo.names.map { arrayOf(lang, it) } }
     }
 
     @get:Rule val compose = createEmptyComposeRule()
 
     @Test fun opens() {
+        // «-pixel»: a 41 mm Pixel Watch, 384 px (192 dp), the smallest round one about.
+        if (lang.endsWith("-pixel")) RuntimeEnvironment.setQualifiers("w192dp-h192dp-round-watch-xhdpi")
         val intent = Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
-            .putExtra("demo", name).putExtra("lang", lang)
+            .putExtra("demo", name).putExtra("lang", lang.removeSuffix("-pixel"))
         ActivityScenario.launch<MainActivity>(intent).use {
             compose.mainClock.autoAdvance = false
             val wait = if (name == "signal") 1500L else 600L

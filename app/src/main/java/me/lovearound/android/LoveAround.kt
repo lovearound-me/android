@@ -10,6 +10,7 @@ class LoveAround : Application() {
         super.onCreate()
         Strings.init(this)
         Push.init(this)
+        WidgetData.onChange = { me.lovearound.android.widget.Widgets.refresh(it) }
         app = this
     }
 

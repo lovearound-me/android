@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">Jedna osoba</string>
+    <string name="widget_person_description">Duże kółko: stuknij, a poleci serduszko.</string>
+    <string name="widget_close">Bliscy</string>
+    <string name="widget_close_description">Kółka bliskich: stuknij, a poleci serduszko.</string>
+    <string name="tile_person">Wyślij serduszko</string>
+    <string name="tile_anyone">Ktoś na świecie</string>
+</resources>

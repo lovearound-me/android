@@ -1,6 +1,8 @@
 package me.lovearound.android
 
 import android.Manifest
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import me.lovearound.android.ui.LoveAroundTheme
 import me.lovearound.android.ui.Root
+import me.lovearound.android.widget.CloseWidgetReceiver
 
 class MainActivity : ComponentActivity() {
     private lateinit var model: AppModel
@@ -31,6 +34,10 @@ class MainActivity : ComponentActivity() {
         // Debug builds: sign in for an hour with a test account's ID token
         // (`--es token $(tools/test-id-token.py)`), nothing saved.
         if (BuildConfig.DEBUG) intent.getStringExtra("token")?.let { if (!model.signedIn) model.borrow(it) }
+        // Debug builds: offer «Близкие» for the home screen (`--ez pinWidget true`), for a check on an emulator.
+        if (BuildConfig.DEBUG && intent.getBooleanExtra("pinWidget", false)) {
+            AppWidgetManager.getInstance(this).requestPinAppWidget(ComponentName(this, CloseWidgetReceiver::class.java), null, null)
+        }
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) = model.becameActive()

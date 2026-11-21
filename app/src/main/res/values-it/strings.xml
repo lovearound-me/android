@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">Una persona</string>
+    <string name="widget_person_description">Un grande cerchio: un tocco e arriva un cuore.</string>
+    <string name="widget_close">Persone care</string>
+    <string name="widget_close_description">I cerchi delle persone care: un tocco e parte un cuore.</string>
+    <string name="tile_person">Invia un cuore</string>
+    <string name="tile_anyone">Qualcuno nel mondo</string>
+</resources>

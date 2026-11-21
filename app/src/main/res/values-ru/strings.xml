@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">Один человек</string>
+    <string name="widget_person_description">Большой кружочек: нажми, и человеку улетит сердечко.</string>
+    <string name="widget_close">Близкие</string>
+    <string name="widget_close_description">Кружочки близких: нажми, и улетит сердечко.</string>
+    <string name="tile_person">Отправить сердечко</string>
+    <string name="tile_anyone">Кому-нибудь на свете</string>
+</resources>

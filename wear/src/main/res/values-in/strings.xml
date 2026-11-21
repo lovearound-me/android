@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The tile's name in the watch's tile list (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="tile_close">Orang terdekat</string>
+</resources>

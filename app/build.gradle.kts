@@ -100,6 +100,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:2.9.4")
     implementation("androidx.browser:browser:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    // Home screen widgets.
+    implementation("androidx.glance:glance-appwidget:1.2.0")
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
 
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")

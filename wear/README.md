@@ -19,6 +19,10 @@ The Apple Watch app of [lovearound-me/ios](https://github.com/lovearound-me/ios)
   светится», «Вид», «Вибрация» (off: hearts come quietly), «Выйти» (the watch
   leaves the account's devices). An account is deleted on the phone or at
   app.lovearound.me.
+- **Outside the app** (`Surfaces.kt`, as the Apple Watch's widgets): the
+  «Близкие» tile (four close people; a tap opens the app) and a ♥ in my
+  color for the watch face (small image, monochrome, or short text; a tap
+  opens the app). No Control Center buttons: Wear OS has none for apps.
 
 The texts, colors and the server's shapes are the phone app's
 (`../shared`). Same package as the phone app (`me.lovearound.android`): one
@@ -27,3 +31,5 @@ above the phone's.
 
     ./gradlew :wear:testDebugUnitTest -Proborazzi.test.record=true   # screens → wear/build/outputs/roborazzi
     adb shell am start -n me.lovearound.android/.wear.MainActivity --es demo hive --es lang ru
+    adb shell am broadcast -a com.google.android.wearable.app.DEBUG_SURFACE --es operation add-tile \
+        --ecn component me.lovearound.android/me.lovearound.android.wear.CloseTile

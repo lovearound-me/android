@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">Bir kişi</string>
+    <string name="widget_person_description">Büyük bir daire: dokun, kalp gitsin.</string>
+    <string name="widget_close">Yakınlar</string>
+    <string name="widget_close_description">Yakınlarının daireleri: dokun, kalp gitsin.</string>
+    <string name="tile_person">Kalp gönder</string>
+    <string name="tile_anyone">Dünyada biri</string>
+</resources>

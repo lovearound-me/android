@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The widget picker's and quick settings' names (the app's own text is in assets/i18n). -->
+<resources>
+    <string name="widget_person">한 사람</string>
+    <string name="widget_person_description">큰 동그라미: 누르면 하트가 날아가요.</string>
+    <string name="widget_close">가까운 사람</string>
+    <string name="widget_close_description">가까운 사람들의 동그라미: 누르면 하트가 날아가요.</string>
+    <string name="tile_person">하트 보내기</string>
+    <string name="tile_anyone">세상의 누군가</string>
+</resources>

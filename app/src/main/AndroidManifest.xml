@@ -45,6 +45,62 @@
             </intent-filter>
         </activity>
 
+        <!-- Home screen widgets: a bubble's tap sends without opening the app. -->
+        <receiver
+            android:name=".widget.PersonWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_person">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/person_widget" />
+        </receiver>
+        <receiver
+            android:name=".widget.CloseWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_close">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/close_widget" />
+        </receiver>
+
+        <!-- Who «Один человек» and the «♥» quick setting send to. -->
+        <activity
+            android:name=".widget.PersonPicker"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+        </activity>
+
+        <!-- Quick settings: a tap sends. -->
+        <service
+            android:name=".widget.PersonTile"
+            android:exported="true"
+            android:icon="@drawable/ic_heart"
+            android:label="@string/tile_person"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".widget.AnyoneTile"
+            android:exported="true"
+            android:icon="@drawable/ic_sparkles"
+            android:label="@string/tile_anyone"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <service
             android:name=".Messaging"
             android:exported="false">

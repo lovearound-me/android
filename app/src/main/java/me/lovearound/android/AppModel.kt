@@ -58,6 +58,30 @@ class AppModel(private val context: Context, val demo: Demo?) {
         val FOREVER: Instant = Instant.parse("9999-01-01T00:00:00Z")
         const val SEND_GLOW_MS = 4200L
 
+        private val sentMap = MapSerializer(String.serializer(), Long.serializer())
+
+        /** Whole minutes until the next signal to anyone, with the app not running. */
+        fun anyoneWait(context: Context, now: Instant = Instant.now()): Int? {
+            val at = context.getSharedPreferences("app", Context.MODE_PRIVATE).getLong("anyoneSentAt", 0)
+            val left = at + 3_600_000 - now.toEpochMilli()
+            return if (at > 0 && left > 0) ((left + 59_999) / 60_000).toInt() else null
+        }
+
+        /** A widget or a quick setting sent one with the app not running: as if from here. */
+        fun noteSent(context: Context, id: String) {
+            val prefs = context.getSharedPreferences("app", Context.MODE_PRIVATE)
+            val now = System.currentTimeMillis()
+            if (id == ANYONE_ID) {
+                prefs.edit().putLong("anyoneSentAt", now).apply()
+                return
+            }
+            val last = prefs.getString("lastSent", null)?.let {
+                try { json.decodeFromString(sentMap, it) } catch (e: Exception) { null }
+            } ?: emptyMap()
+            prefs.edit().putString("lastSent", json.encodeToString(sentMap, last + (id to now)))
+                .putBoolean("starting", false).apply()
+        }
+
         /** The code of an invite link (or the bare code), as typed; null if it can't be one. */
         fun inviteId(input: String): String? {
             var text = input.trim()
@@ -98,7 +122,14 @@ class AppModel(private val context: Context, val demo: Demo?) {
     var email by mutableStateOf<String?>(null); private set
     var provider by mutableStateOf<String?>(null); private set
     var inviteUrl by mutableStateOf<String?>(null); private set
-    var contacts by mutableStateOf<List<Contact>>(emptyList()); private set
+    private var book by mutableStateOf<List<Contact>>(emptyList())
+    /** The book; the widgets get a copy of it (WidgetData). */
+    var contacts: List<Contact>
+        get() = book
+        private set(value) {
+            book = value
+            if (demo == null && signedIn) WidgetData.save(context, WidgetData.from(value))
+        }
     var loaded by mutableStateOf(false); private set
     var devices by mutableStateOf<List<Device>>(emptyList()); private set
     var devicesLoaded by mutableStateOf(false); private set
@@ -186,6 +217,7 @@ class AppModel(private val context: Context, val demo: Demo?) {
         if (demo != null) {
             demo.apply(this)
         } else {
+            WidgetData.setMyColor(context, myColor)
             auth.session?.let {
                 signedIn = true
                 email = it.email
@@ -395,6 +427,7 @@ class AppModel(private val context: Context, val demo: Demo?) {
     fun updateMyColor(index: Int) {
         myColor = index
         prefs.edit().putInt("myColor", index).apply()
+        if (demo == null) WidgetData.setMyColor(context, index)
     }
 
     fun updateReceiveHere(on: Boolean) {
@@ -437,6 +470,16 @@ class AppModel(private val context: Context, val demo: Demo?) {
         vibrates = on
         if (demo == null) NotifyLook.setVibrates(context, on)
         if (on) buzzPattern()
+    }
+
+    /** A widget or a quick setting sent one while the app is running. */
+    fun sentElsewhere(id: String) {
+        if (id == ANYONE_ID) {
+            markAnyoneSent(Instant.now())
+        } else {
+            lastSent = lastSent + (id to System.currentTimeMillis())
+            if (starting) markStarting(false)
+        }
     }
 
     private fun markAnyoneSent(at: Instant?) {
@@ -844,6 +887,7 @@ class AppModel(private val context: Context, val demo: Demo?) {
             Push.forget(context)
             cacheFile.delete()
             auth.signOut()
+            WidgetData.clear(context)
         }
         goingOffline?.cancel()
         offline = false
