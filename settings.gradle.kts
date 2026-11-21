@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "LoveAround"
-include(":app")
+include(":app", ":wear")

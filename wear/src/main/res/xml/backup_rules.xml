@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The watch's own token stays on this watch: a restored backup would carry
+     it to another one. -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="session.xml" />
+    <exclude domain="sharedpref" path="push.xml" />
+</full-backup-content>

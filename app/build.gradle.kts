@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("io.github.takahirom.roborazzi")
 }
 
 // The upload key for Google Play, never in the repo: keystore.properties
@@ -30,6 +31,16 @@ android {
         // The build number goes up with every upload to Google Play; CI sets it.
         versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
         versionName = "1.0"
+        buildConfigField("String", "CLIENT", "\"android\"")
+    }
+
+    // What the watch app uses too: texts, colors, the server's shapes.
+    sourceSets["main"].java.srcDir("../shared/src/main/java")
+    sourceSets["main"].assets.srcDir("../shared/src/main/assets")
+
+    testOptions {
+        // Robolectric: screens drawn on the JVM, no emulator (scripts/README).
+        unitTests.isIncludeAndroidResources = true
     }
 
     signingConfigs {
@@ -100,4 +111,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.18.1")
+    testImplementation("androidx.test:core:1.7.0")
+    testImplementation("androidx.test.ext:junit:1.3.0")
+    testImplementation(composeBom)
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi:1.79.0")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:1.79.0")
 }

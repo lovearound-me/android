@@ -7,7 +7,7 @@ learn who it was.
 
 The Android twin of the iPhone app ([lovearound-me/ios](https://github.com/lovearound-me/ios)):
 the same screens, the same server ([lovearound-me/server](https://github.com/lovearound-me/server),
-`docs/schema.md`), the same texts (`app/src/main/assets/i18n`, keyed by the
+`docs/schema.md`), the same texts (`shared/src/main/assets/i18n`, keyed by the
 Russian, copied from the iPhone app's `i18n/`).
 
 ## The phone app (`app/`)
@@ -41,17 +41,32 @@ See [wear/README.md](wear/README.md).
 
 ## Build and check
 
-    ./gradlew assembleDebug testDebugUnitTest
-    scripts/screenshots.sh ru build/shots      # every demo screen from a running emulator
+    python3 scripts/check-i18n.py                 # every tr("…") in every language
+    ./gradlew testDebugUnitTest -Proborazzi.test.record=true
+    ./gradlew lintDebug assembleRelease
+
+The tests draw every demo screen of both apps on the JVM (Robolectric and
+Roborazzi, no emulator) into `app/build/outputs/roborazzi/<lang>/` and
+`wear/build/outputs/roborazzi/<lang>/`, and check the sign-in box against
+one sealed by the site's own code. `scripts/screenshots.sh` takes the same
+screens from a running emulator or a phone.
 
 `--es demo <name>` opens a screen with made-up people and no network (see
-`Demo.kt`); a debug build also takes `--es token <Firebase ID token>` to
-sign in for an hour (`tools/test-id-token.py anna` in the lovearound folder).
+`Demo.kt`, `WatchDemo.kt`); a debug phone build also takes `--es token
+<Firebase ID token>` to sign in for an hour (`tools/test-id-token.py anna`
+in the lovearound folder).
+
+`shared/` holds what both apps compile in: the texts
+(`shared/src/main/assets/i18n`, keyed by the Russian, new ones added with
+`tools/add-i18n.py`), the colors, the server's shapes.
 
 Release builds are signed with the Google Play upload key, which is never
 in this repo: `keystore.properties` on the machine that builds, or the
-`UPLOAD_*` environment variables in CI. The debug key is committed on
-purpose, so Google sign-in (which checks the key) works in every debug build.
+`UPLOAD_*` environment variables. The `release` workflow builds both
+bundles from the repo's secrets (`UPLOAD_KEYSTORE_BASE64`,
+`UPLOAD_STORE_PASSWORD`, `UPLOAD_KEY_ALIAS`, `UPLOAD_KEY_PASSWORD`). The
+debug key is committed on purpose, so Google sign-in (which checks the key)
+works in every debug build.
 
 ## License
 

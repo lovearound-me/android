@@ -2,9 +2,11 @@ package me.lovearound.android
 
 import android.content.Context
 import android.net.Uri
-import android.util.Base64
-import org.json.JSONObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.math.BigInteger
+import java.util.Base64
 import java.security.KeyFactory
 import java.security.KeyPairGenerator
 import java.security.SecureRandom
@@ -60,9 +62,14 @@ object SiteSignIn {
         val epk = uri.getQueryParameter("epk") ?: return null
         val box = uri.getQueryParameter("box") ?: return null
         prefs.edit().clear().apply()
+        return open(unb64(key), state, epk, box)
+    }
+
+    /** The site's box opened with the app's private key (PKCS#8); null if it isn't ours. */
+    internal fun open(key: ByteArray, state: String, epk: String, box: String): Opened? {
         return try {
             val factory = KeyFactory.getInstance("EC")
-            val private = factory.generatePrivate(PKCS8EncodedKeySpec(unb64(key))) as ECPrivateKey
+            val private = factory.generatePrivate(PKCS8EncodedKeySpec(key)) as ECPrivateKey
             val point = unb64(epk)
             if (point.size != 65 || point[0] != 4.toByte()) return null
             val theirs = factory.generatePublic(ECPublicKeySpec(
@@ -76,8 +83,9 @@ object SiteSignIn {
             val cipher = Cipher.getInstance("AES/GCM/NoPadding")
             cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(aes, "AES"), GCMParameterSpec(128, sealed, 0, 12))
             cipher.updateAAD(state.toByteArray())
-            val session = JSONObject(String(cipher.doFinal(sealed, 12, sealed.size - 12)))
-            Opened(session.optString("uid"), session.optString("email").ifEmpty { null }, session.optString("rt"))
+            val session = json.parseToJsonElement(String(cipher.doFinal(sealed, 12, sealed.size - 12))).jsonObject
+            fun field(name: String) = session[name]?.jsonPrimitive?.contentOrNull?.ifEmpty { null }
+            Opened(field("uid") ?: return null, field("email"), field("rt") ?: return null)
         } catch (e: Exception) {
             null
         }
@@ -101,6 +109,6 @@ object SiteSignIn {
         return byteArrayOf(4) + fixed(key.w.affineX) + fixed(key.w.affineY)
     }
 
-    private fun b64(bytes: ByteArray) = Base64.encodeToString(bytes, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
-    private fun unb64(text: String) = Base64.decode(text, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
+    private fun b64(bytes: ByteArray) = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
+    internal fun unb64(text: String): ByteArray = Base64.getUrlDecoder().decode(text)
 }

@@ -35,10 +35,10 @@ object Push {
     fun init(context: Context) {
         if (FirebaseApp.getApps(context).isEmpty()) {
             FirebaseApp.initializeApp(context, FirebaseOptions.Builder()
-                .setApplicationId("1:989287714644:android:0da5ca579b89451c2e42c1")
-                .setApiKey("AIzaSyB-mXJxxoyPWPgbbr4uDjOy_Inzo63ShRw")
-                .setProjectId("needed-app-2026")
-                .setGcmSenderId("989287714644")
+                .setApplicationId(Config.FIREBASE_ANDROID_APP)
+                .setApiKey(Config.FIREBASE_ANDROID_KEY)
+                .setProjectId(Config.FIREBASE_PROJECT)
+                .setGcmSenderId(Config.FIREBASE_SENDER)
                 .build())
         }
         val manager = context.getSystemService(NotificationManager::class.java)
