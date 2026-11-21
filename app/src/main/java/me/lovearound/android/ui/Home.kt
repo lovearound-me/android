@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,11 +34,12 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HeartBroken
 import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,17 +53,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.time.Instant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.lovearound.android.AppModel
+import me.lovearound.android.Palette
 import me.lovearound.android.tr
-import java.time.Instant
 
 /**
  * Variant Б of the mockups, as changed on the iPhone: «Кому-нибудь на свете»
@@ -104,8 +108,38 @@ fun HomeScreen(model: AppModel) {
                         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, tint = C.faint)
                     }
                 }
+                val link = model.inviteUrl
+                if (model.contacts.isNotEmpty() && link != null) MyLoveIdRow(model, link)
             }
         }
+    }
+}
+
+/** «Мой Love ID» under «Вся книга» (variant Б, 2026-11-21): new people found it only in Settings. */
+@Composable
+private fun MyLoveIdRow(model: AppModel, link: String) {
+    val context = LocalContext.current
+    val color = Palette.color(model.myColor)
+    Row(Modifier
+        .fillMaxWidth()
+        .heightIn(min = 60.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(C.field)
+        .clickable(role = Role.Button, onClickLabel = tr("Поделиться своим Love ID")) {
+            model.openedShare(); share(context, model.shareText)
+        }
+        .testTag("homeLoveId")
+        .padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(30.dp).clip(CircleShape).background(color.copy(alpha = 0.2f)).border(2.dp, color, CircleShape),
+            contentAlignment = Alignment.Center) {
+            Icon(Icons.Filled.Favorite, null, tint = color, modifier = Modifier.size(14.dp))
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(tr("Мой Love ID"), color = C.ink, fontSize = 16.sp)
+            Text(link.removePrefix("https://"), color = C.muted, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        Icon(Icons.Filled.Share, tr("Поделиться своим Love ID"), tint = C.link)
     }
 }
 
