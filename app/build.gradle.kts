@@ -26,7 +26,7 @@ android {
 
     defaultConfig {
         applicationId = "me.lovearound.android"
-        minSdk = 28
+        minSdk = 26
         targetSdk = 36
         // The build number goes up with every upload to Google Play; CI sets it.
         versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
