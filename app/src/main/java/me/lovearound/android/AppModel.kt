@@ -1,5 +1,6 @@
 package me.lovearound.android
 
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -83,6 +84,12 @@ class AppModel(private val context: Context, val demo: Demo?) {
         }
 
         /** The code of an invite link (or the bare code), as typed; null if it can't be one. */
+        /** The code of a Love ID link copied to the clipboard: only a link, not any word that looks like a code. */
+        fun pastedInvite(text: String?): String? {
+            if (text == null || !Regex("lovearound\\.me/(?:[a-z]{2}/)?i/|lovearound://add/").containsMatchIn(text)) return null
+            return inviteId(text)
+        }
+
         fun inviteId(input: String): String? {
             var text = input.trim()
             for (marker in listOf("/i/", "lovearound://add/", "needed://add/")) {
@@ -780,6 +787,22 @@ class AppModel(private val context: Context, val demo: Demo?) {
         tab = Tab.Book
         pairing = null
         adding = invite
+    }
+
+    /**
+     * The first launch, installed from someone's Love ID page: the page copied
+     * the link on the way to Google Play, so the app offers to add them, as the
+     * desktop apps do. Once, and only on a phone with no account here yet. The
+     * clipboard can be read only while the window has focus (Android 10+).
+     */
+    fun offerPastedInviteOnFirstLaunch(context: Context) {
+        if (demo != null || prefs.getBoolean("launchedBefore", false)) return
+        prefs.edit().putBoolean("launchedBefore", true).apply()
+        if (signedIn || pendingAdd != null || adding != null) return
+        val clip = context.getSystemService(ClipboardManager::class.java) ?: return
+        if (clip.primaryClipDescription?.hasMimeType("text/*") != true) return
+        val text = clip.primaryClip?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.coerceToText(context)?.toString()
+        pastedInvite(text)?.let { openAdding(it) }
     }
 
     private fun openPairing(code: String) {

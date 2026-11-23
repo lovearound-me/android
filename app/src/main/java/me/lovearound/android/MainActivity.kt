@@ -56,6 +56,11 @@ class MainActivity : ComponentActivity() {
         handle(intent)
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) model.offerPastedInviteOnFirstLaunch(this)
+    }
+
     private fun handle(intent: Intent) {
         if (intent.getBooleanExtra(Push.EXTRA_TAPPED, false)) {
             intent.removeExtra(Push.EXTRA_TAPPED)

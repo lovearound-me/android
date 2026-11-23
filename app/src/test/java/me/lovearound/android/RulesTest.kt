@@ -44,6 +44,16 @@ class RulesTest {
         assertNull(AppModel.inviteId(""))
     }
 
+    @Test fun onlyALinkOnTheClipboardIsAnInvite() {
+        assertEquals("K7MXR-2QHP9", AppModel.pastedInvite("https://lovearound.me/i/K7MXR-2QHP9"))
+        assertEquals("K7MXR-2QHP9", AppModel.pastedInvite("https://lovearound.me/ru/i/K7MXR-2QHP9"))
+        assertEquals("k7mxr2qhp9", AppModel.pastedInvite("lovearound://add/k7mxr2qhp9"))
+        // A word that only looks like a code, or another site's link, is not one.
+        assertNull(AppModel.pastedInvite("K7MXR-2QHP9"))
+        assertNull(AppModel.pastedInvite("https://example.com/i/K7MXR-2QHP9"))
+        assertNull(AppModel.pastedInvite(null))
+    }
+
     @Test fun paletteWrapsAround() {
         assertEquals(12, Palette.all.size)
         assertEquals(0, Palette.index(null))
