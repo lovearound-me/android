@@ -14,7 +14,9 @@ The Apple Watch app of [lovearound-me/ios](https://github.com/lovearound-me/ios)
 - **Hearts in**: FCM data messages to the watch itself
   (`PUT /v1/devices/self/push`, `platform: android`), on the watch's own
   terms from its card on the phone. In front: the edge glows in my color
-  and hearts float up; behind: a notification with a wave of hearts.
+  and hearts float up; behind: a notification with a wave of hearts. While
+  signed in, the watch turns off Wear OS's copies of the phone app's
+  notifications, which would show each heart a second time.
 - **Settings**: «Получать сердечки» (the card's «Принимает»), «Как
   светится», «Вид», «Вибрация» (off: hearts come quietly), «Выйти» (the watch
   leaves the account's devices). An account is deleted on the phone or at

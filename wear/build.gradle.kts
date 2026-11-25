@@ -105,6 +105,7 @@ dependencies {
     implementation("androidx.wear.protolayout:protolayout-expression:1.4.2")
     implementation("androidx.wear.watchface:watchface-complications-data-source-ktx:1.3.0")
     implementation("androidx.concurrent:concurrent-futures:1.3.0")
+    implementation("androidx.wear:wear-phone-interactions:1.1.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.18.1")

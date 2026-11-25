@@ -10,9 +10,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.wear.phone.interactions.notifications.BridgingConfig
+import androidx.wear.phone.interactions.notifications.BridgingManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.FirebaseMessaging
@@ -88,6 +91,15 @@ object WatchPush {
             FirebaseMessaging.getInstance().isAutoInitEnabled = false
             FirebaseMessaging.getInstance().deleteToken()
         } catch (e: Exception) {}
+    }
+
+    /** Wear OS copies each of the phone app's notifications to the wrist unless the watch app turns that off. */
+    fun copyFromPhone(context: Context, on: Boolean) {
+        try {
+            BridgingManager.fromContext(context).setConfig(BridgingConfig.Builder(context, on).build())
+        } catch (e: Exception) {
+            Log.w("WatchPush", "Wear OS didn't take the bridging setting", e)
+        }
     }
 
     /** The wrist's tap, if «Вибрация» is on. */
