@@ -160,6 +160,7 @@ class WatchModel(private val context: Context, val demo: WatchDemo?) {
 
     private fun signedIn(session: Session) {
         session.save(context)
+        WatchPush.copyFromPhone(context, on = false)
         this.session = session
         notice = null
         pairing = null
@@ -187,6 +188,7 @@ class WatchModel(private val context: Context, val demo: WatchDemo?) {
         if (demo == null) {
             Session.clear(context)
             WatchPush.forget(context)
+            WatchPush.copyFromPhone(context, on = true)
             WidgetData.clear(context)
         }
         session = null

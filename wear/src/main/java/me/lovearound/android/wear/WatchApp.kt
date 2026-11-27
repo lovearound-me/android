@@ -10,6 +10,8 @@ class WatchApp : Application() {
         super.onCreate()
         Strings.init(this)
         WatchPush.init(this)
+        // Wear OS keeps the setting outside the app's storage, which can be cleared without «Выйти».
+        WatchPush.copyFromPhone(this, on = Session.load(this) == null)
         WidgetData.onChange = { Surfaces.refresh(it) }
     }
 
